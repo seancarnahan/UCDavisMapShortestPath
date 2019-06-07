@@ -7,7 +7,7 @@
 
 
 
-struct SXMLEntity{
+struct CXMLEntity{
     using TAttribute = std::pair< std::string, std::string >;
     enum class EType{StartElement, EndElement, CharData, CompleteElement};
     EType DType;

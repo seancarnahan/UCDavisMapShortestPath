@@ -4,10 +4,10 @@ void StartElementHandler (void *data, const XML_Char *name, const XML_Char **att
   CXMLReader *ptr = static_cast<CXMLReader*>(data);
   //std::cout << "StartElementHandler: " << name << "\n";
 
-  SXMLEntity entity;
+  CXMLEntity entity;
 
   //not sure how to get the type here
-  //courseEntity.DType = SXMLEntity::EType::StartElement;
+  entity.DType = CXMLEntity::EType::StartElement;
   entity.DNameData = name;
 
   //attributes come as an flattened array - need to pair things up
@@ -58,7 +58,7 @@ bool CXMLReader::End()
     return input.eof();
 }
 
-bool CXMLReader::ReadEntity(SXMLEntity &entity, bool skipcdata) {
+bool CXMLReader::ReadEntity(CXMLEntity &entity, bool skipcdata) {
   if (entityIdx < entities.size()) {
     entity = entities[entityIdx];
     entityIdx++;

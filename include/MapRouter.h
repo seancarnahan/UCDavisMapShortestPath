@@ -13,22 +13,24 @@ class CMapRouter{
         using TPathStep = std::pair<std::string, TNodeID>;
 
         static const TNodeID InvalidNodeID;
+	
     private:
       using TNodeIndex = int;
-      struct Edge{
+      struct Edge {
         double Distance;
         TNodeIndex DestNode;
       };
 
-      struct Node{
+      struct Node {
         TNodeID NodeID;
-
-        std::std::vector<Edge> Edges;
+	TLocation Location;
+        std::vector<Edge> Edges;
       };
 
       std::vector<Node> Nodes;
-      std::map<TNodeID,
-      std::std::vector<TNodeID> SortedNodeIDs;
+      std::map<TNodeID,Node> NodeTranslation;
+      std::vector<TNodeID> SortedNodeIDs;
+      
     public:
         CMapRouter();
         ~CMapRouter();
@@ -49,7 +51,7 @@ class CMapRouter{
         double FindShortestPath(TNodeID src, TNodeID dest, std::vector< TNodeID > &path);
         double FindFastestPath(TNodeID src, TNodeID dest, std::vector< TPathStep > &path);
         bool GetPathDescription(const std::vector< TPathStep > &path, std::vector< std::string > &desc) const;
-        int NodeTranslation;
+        //int NodeTranslation;
 };
 
 #endif

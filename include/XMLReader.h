@@ -16,11 +16,11 @@ class CXMLReader{
  public:
   CXMLReader(std::istream &is);
   ~CXMLReader();
-  std::vector<SXMLEntity> entities;
+  std::vector<CXMLEntity> entities;
   int entityIdx = 0;
   
   bool End();
-  bool ReadEntity(SXMLEntity &entity, bool skipcdata = false);
+  bool ReadEntity(CXMLEntity &entity, bool skipcdata = false);
 };
 
 #endif
