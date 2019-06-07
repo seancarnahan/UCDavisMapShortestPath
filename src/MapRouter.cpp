@@ -13,6 +13,7 @@ const CMapRouter::TNodeID CMapRouter::InvalidNodeID = -1;
 
 CMapRouter::CMapRouter(){
 
+
 }
 
 CMapRouter::~CMapRouter(){
@@ -57,11 +58,19 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
     return false;
   }
 
-  while (!OSMReader.End()){
+  std::cerr<< "do you even enter"<<std::endl;
+  
+
+  //while (!OSMReader.End()){
+  while(OSMReader.ReadEntity(TempEntity)) {
     OSMReader.ReadEntity(TempEntity, true);
+    std::cerr<< "do you even enter 0"<<std::endl;
     if(TempEntity.DType == CXMLEntity::EType::StartElement){
+      std::cerr<< "do you even enter 1"<<std::endl;
 
       if(TempEntity.DNameData == "node"){
+        std::cerr<< "do you even enter 2"<<std::endl;
+
         TNodeID TempNodeID = std::stoul(TempEntity.AttributeValue("id"));
         double TempLat = std::stod(TempEntity.AttributeValue("lat"));
         double TempLon = std::stod(TempEntity.AttributeValue("lon"));
@@ -72,11 +81,18 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
         NodeTranslation[TempNodeID] = TempNode;
         Nodes.push_back(TempNode);
         SortedNodeIDs.push_back(TempNodeID);
+        std::cerr<< "Check these babes out, baby! Part 2: " << SortedNodeIDs.size()  <<std::endl;
       } else if(TempEntity.DNameData == "way"){
+
 
       }
     }
   }
+  OSMReader.End();
+
+  std::cerr<< "Check these babes out, baby!: " << SortedNodeIDs.size()  <<std::endl;
+
+
 
   std::sort(SortedNodeIDs.begin(), SortedNodeIDs.end());
   return true;
