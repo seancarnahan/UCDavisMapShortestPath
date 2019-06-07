@@ -13,7 +13,7 @@ class CMapRouter{
         using TPathStep = std::pair<std::string, TNodeID>;
 
         static const TNodeID InvalidNodeID;
-	
+
     private:
       using TNodeIndex = int;
       struct Edge {
@@ -23,14 +23,14 @@ class CMapRouter{
 
       struct Node {
         TNodeID NodeID;
-	TLocation Location;
+	      TLocation Location;
         std::vector<Edge> Edges;
       };
 
       std::vector<Node> Nodes;
       std::map<TNodeID,Node> NodeTranslation;
       std::vector<TNodeID> SortedNodeIDs;
-      
+
     public:
         CMapRouter();
         ~CMapRouter();

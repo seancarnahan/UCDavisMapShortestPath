@@ -68,10 +68,10 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
         Node TempNode;
         TempNode.NodeID = TempNodeID;
         TempNode.Location = std::make_pair(TempLat, TempLon);
-        //NodeTranslation[Node.size()] = TempNodeID;
+        //NodeTranslation[Node.size()] = TempNodeID;  was Node.size() is This adding an item to the map?
+        NodeTranslation[TempNodeID] = TempNode;
         Nodes.push_back(TempNode);
         SortedNodeIDs.push_back(TempNodeID);
-
       } else if(TempEntity.DNameData == "way"){
 
       }
@@ -84,6 +84,9 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
 }
 
 size_t CMapRouter::NodeCount() const{
+  std::cerr<< "Code enters Node Count())"<<std::endl;
+  std::cerr<< "size of sorted node ids: " << SortedNodeIDs.size()  <<std::endl;
+  std::cerr<< "size of NODES: " << Nodes.size()  <<std::endl;
   return SortedNodeIDs.size();
 }
 
@@ -91,6 +94,8 @@ size_t CMapRouter::NodeCount() const{
  * Use the given index to get the ID of the node within SortedNodeIDs
  */
 CMapRouter::TNodeID CMapRouter::GetSortedNodeIDByIndex(size_t index) const{
+  std::cerr<< "Code enters by id()"<<std::endl;
+
   return SortedNodeIDs[index];
 }
 
@@ -113,8 +118,10 @@ CMapRouter::TLocation CMapRouter::GetNodeLocationByID (TNodeID nodeID) const{
 /**
  * Get the location of the node by index within the sorted nodes
  */
- 
+
 CMapRouter::TLocation CMapRouter::GetSortedNodeLocationByIndex(size_t index) const{
+  std::cerr<< "Code enters by location()"<<std::endl;
+
   return GetNodeLocationByID(GetSortedNodeIDByIndex(index));
 }
 
