@@ -21,7 +21,7 @@ void StartElementHandler (void *data, const XML_Char *name, const XML_Char **att
     entity.SetAttribute(attrName, attrValue);
   }
   ptr->entities.push_back(entity);
-  
+
 }
 
 
@@ -31,12 +31,12 @@ void EndElementHandler(void *data, const XML_Char *name) {
 
 CXMLReader::CXMLReader(std::istream &in) : input(in) {
 
-  
+
   //this is a DOM parser so parse the whole thing in the constructor
   XML_Parser parser = XML_ParserCreate(NULL);
   XML_SetUserData(parser, this);
   XML_SetElementHandler(parser, StartElementHandler, EndElementHandler);
-  
+
   std::string buffer;
   while (std::getline(input, buffer)) {
     //std::cout << "Constructor: read line [" << buffer << "]\n";
@@ -50,12 +50,12 @@ CXMLReader::CXMLReader(std::istream &in) : input(in) {
 
 CXMLReader::~CXMLReader()
 {
-    
+
 }
 
 bool CXMLReader::End()
 {
-    return input.eof();
+    return (entityIdx >= entities.size());
 }
 
 bool CXMLReader::ReadEntity(CXMLEntity &entity, bool skipcdata) {
@@ -66,6 +66,6 @@ bool CXMLReader::ReadEntity(CXMLEntity &entity, bool skipcdata) {
   } else {
     return false;
   }
-  
+
 
 }

@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <limits>
 #include <algorithm>
+#include <vector>
 
 const CMapRouter::TNodeID CMapRouter::InvalidNodeID = -1;
 
@@ -48,6 +49,7 @@ double CMapRouter::CalculateBearing(double lat1, double lon1,double lat2, double
   return RadiansToDegrees(atan2(X,Y));
 }
 
+
 bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::istream &routes){
   CXMLReader OSMReader(osm);
   CXMLEntity TempEntity;
@@ -58,39 +60,64 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
     return false;
   }
 
+  Node currentNode;
+  currentNode.NodeID = InvalidNodeID;
+  //when you get to a way node, create a new edge
+  //set currentEdge to newEdge
+  //need another else if statement line 84
 
-  //while (!OSMReader.End()){
-  while(OSMReader.ReadEntity(TempEntity)) {
+
+  while (!OSMReader.End()){
     OSMReader.ReadEntity(TempEntity, true);
     if(TempEntity.DType == CXMLEntity::EType::StartElement){
-      std::cerr<< "-------FOUND START------"<<std::endl;
       if(TempEntity.DNameData == "node"){
-        std::cerr<< "-------FOUND NODE------"<<std::endl;
         TNodeID TempNodeID = std::stoul(TempEntity.AttributeValue("id"));
         double TempLat = std::stod(TempEntity.AttributeValue("lat"));
         double TempLon = std::stod(TempEntity.AttributeValue("lon"));
         Node TempNode;
         TempNode.NodeID = TempNodeID;
         TempNode.Location = std::make_pair(TempLat, TempLon);
-        //NodeTranslation[Node.size()] = TempNodeID;  was Node.size() is This adding an item to the map?
         NodeTranslation[TempNodeID] = TempNode;
         Nodes.push_back(TempNode);
         SortedNodeIDs.push_back(TempNodeID);
       } else if(TempEntity.DNameData == "way"){
-        std::cerr<< "------FOUND WAY-------"<<std::endl;
+        //you have to treat these like a stack
+        //
+
+      } else if(TempEntity.DNameData == "nd") {
+        //this is gonna be the node that it passes through
+        if(currentNode.NodeID == InvalidNodeID) {
+
+          //every time you come to a way tag. set currentNode.NODEID to InvalidNodeID
+
+          //if the curre
+          //in here set curretnNode to the the node associated with the reference id
+          //AttributeValue of id, look up that node by its id (NodeTranslation) take that node set current node equal to that
+        } else {
+          //heres the case if its not invalid
+          //look up the node associated with this reference
+          //then add an edge to the currentNode. using the ID of this ND tag
+          //to do that do two things:
+          //calculate distance between current Node and the node that you just looked up in this else statement(use HaversineDistance)
+          //set edge to the current node, so your gonna have a distance and ID and then you are going to add that to the current NODE
+          //last step: set currentNode = to the NODE thats in this else script
+
+          //2 is not invalid -> look up distance between nodeId 1 and 2 and then set the corresponding fields
+          //then set currentNode to 2
+          //currentNode -> is really the node in the past
+
+        }
+
+
       }
     }
   }
-  OSMReader.End();
   std::sort(SortedNodeIDs.begin(), SortedNodeIDs.end());
   return true;
 
 }
 
 size_t CMapRouter::NodeCount() const{
-  std::cerr<< "Code enters Node Count())"<<std::endl;
-  std::cerr<< "size of sorted node ids: " << SortedNodeIDs.size()  <<std::endl;
-  std::cerr<< "size of NODES: " << Nodes.size()  <<std::endl;
   return SortedNodeIDs.size();
 }
 
@@ -98,7 +125,11 @@ size_t CMapRouter::NodeCount() const{
  * Use the given index to get the ID of the node within SortedNodeIDs
  */
 CMapRouter::TNodeID CMapRouter::GetSortedNodeIDByIndex(size_t index) const{
-  std::cerr<< "Code enters by id()"<<std::endl;
+
+    //return std::make_pair(180.0, 360.0);
+  if ( index >= SortedNodeIDs.size()) {
+      return InvalidNodeID;
+  }
 
   return SortedNodeIDs[index];
 }
@@ -108,14 +139,25 @@ CMapRouter::TNodeID CMapRouter::GetSortedNodeIDByIndex(size_t index) const{
  * Get the location of the node by node ID
  */
 CMapRouter::TLocation CMapRouter::GetNodeLocationByID (TNodeID nodeID) const{
-
+if (nodeID == InvalidNodeID) {
+  return std::make_pair(180.0, 360.0);
+}
   //Find the key and value (Search) of the nodeID within the map
   //the key (the node ID) will be Search->first
   //and the value (the node) will be Search->second
+
   auto Search = NodeTranslation.find(nodeID);
+
+
+
+  //if given ID not in the dataset
+
+
 
   //get the location of the node that was found
   return (Search->second).Location;
+
+
 
 }
 
@@ -124,7 +166,7 @@ CMapRouter::TLocation CMapRouter::GetNodeLocationByID (TNodeID nodeID) const{
  */
 
 CMapRouter::TLocation CMapRouter::GetSortedNodeLocationByIndex(size_t index) const{
-  std::cerr<< "Code enters by location()"<<std::endl;
+
 
   return GetNodeLocationByID(GetSortedNodeIDByIndex(index));
 }

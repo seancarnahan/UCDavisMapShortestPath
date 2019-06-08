@@ -57,47 +57,47 @@ TEST(MapRouter,BasicTest){
 
     EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
     EXPECT_EQ(MapRouter.NodeCount(), 6);
-    //EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(0), 1);
-    // EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(1), 2);
-    // EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(2), 3);
-    // EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(3), 4);
-    // EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(4), 5);
-    // EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(5), 6);
-    // auto Position = MapRouter.GetSortedNodeLocationByIndex(0);
-    // EXPECT_EQ(std::get<0>(Position), 0.0);
-    // EXPECT_EQ(std::get<1>(Position), 0.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(1);
-    // EXPECT_EQ(std::get<0>(Position), 0.0);
-    // EXPECT_EQ(std::get<1>(Position), 1.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(2);
-    // EXPECT_EQ(std::get<0>(Position), 0.0);
-    // EXPECT_EQ(std::get<1>(Position), 2.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(3);
-    // EXPECT_EQ(std::get<0>(Position), 1.0);
-    // EXPECT_EQ(std::get<1>(Position), 2.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(4);
-    // EXPECT_EQ(std::get<0>(Position), 1.0);
-    // EXPECT_EQ(std::get<1>(Position), 1.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(5);
-    // EXPECT_EQ(std::get<0>(Position), 1.0);
-    // EXPECT_EQ(std::get<1>(Position), 0.0);
-    // Position = MapRouter.GetSortedNodeLocationByIndex(6);
-    // EXPECT_EQ(std::get<0>(Position), 180.0);
-    // EXPECT_EQ(std::get<1>(Position), 360.0);
-    //
-    // EXPECT_EQ(MapRouter.RouteCount(), 1);
-    // EXPECT_EQ(MapRouter.GetSortedRouteNameByIndex(0), "A");
-    // EXPECT_EQ(MapRouter.GetNodeIDByStopID(20), 2);
-    // EXPECT_EQ(MapRouter.GetNodeIDByStopID(21), 3);
-    // EXPECT_EQ(MapRouter.GetNodeIDByStopID(22), 4);
-    // EXPECT_EQ(MapRouter.GetNodeIDByStopID(23), 5);
-    // std::vector< CMapRouter::TStopID > Stops;
-    //
-    // EXPECT_TRUE(MapRouter.GetRouteStopsByRouteName("A",Stops));
-    // EXPECT_EQ(Stops.size(), 3);
-    // EXPECT_EQ(Stops[0], 20);
-    // EXPECT_EQ(Stops[1], 21);
-    // EXPECT_EQ(Stops[2], 23);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(0), 1);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(1), 2);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(2), 3);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(3), 4);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(4), 5);
+    EXPECT_EQ(MapRouter.GetSortedNodeIDByIndex(5), 6);
+    auto Position = MapRouter.GetSortedNodeLocationByIndex(0);
+    EXPECT_EQ(std::get<0>(Position), 0.0);
+    EXPECT_EQ(std::get<1>(Position), 0.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(1);
+    EXPECT_EQ(std::get<0>(Position), 0.0);
+    EXPECT_EQ(std::get<1>(Position), 1.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(2);
+    EXPECT_EQ(std::get<0>(Position), 0.0);
+    EXPECT_EQ(std::get<1>(Position), 2.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(3);
+    EXPECT_EQ(std::get<0>(Position), 1.0);
+    EXPECT_EQ(std::get<1>(Position), 2.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(4);
+    EXPECT_EQ(std::get<0>(Position), 1.0);
+    EXPECT_EQ(std::get<1>(Position), 1.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(5);
+    EXPECT_EQ(std::get<0>(Position), 1.0);
+    EXPECT_EQ(std::get<1>(Position), 0.0);
+    Position = MapRouter.GetSortedNodeLocationByIndex(6);
+    EXPECT_EQ(std::get<0>(Position), 180.0);
+    EXPECT_EQ(std::get<1>(Position), 360.0);
+
+    EXPECT_EQ(MapRouter.RouteCount(), 1);
+    EXPECT_EQ(MapRouter.GetSortedRouteNameByIndex(0), "A");
+    EXPECT_EQ(MapRouter.GetNodeIDByStopID(20), 2);
+    EXPECT_EQ(MapRouter.GetNodeIDByStopID(21), 3);
+    EXPECT_EQ(MapRouter.GetNodeIDByStopID(22), 4);
+    EXPECT_EQ(MapRouter.GetNodeIDByStopID(23), 5);
+    std::vector< CMapRouter::TStopID > Stops;
+
+    EXPECT_TRUE(MapRouter.GetRouteStopsByRouteName("A",Stops));
+    EXPECT_EQ(Stops.size(), 3);
+    EXPECT_EQ(Stops[0], 20);
+    EXPECT_EQ(Stops[1], 21);
+    EXPECT_EQ(Stops[2], 23);
 }
 
 TEST(MapRouter,ShortestPathTest){
