@@ -219,7 +219,8 @@ bool CMapRouter::GetRouteStopsByRouteName(const std::string &route, std::vector<
 
 //do this Friday
 double CMapRouter::FindShortestPath(TNodeID src, TNodeID dest, std::vector< TNodeID > &path){
-  // Your code HERE
+  //path is a vector of nodes to the destination
+  //should return shortest distance
   return 0.0;
 }
 
