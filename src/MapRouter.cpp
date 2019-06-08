@@ -55,17 +55,12 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
   CXMLEntity TempEntity;
 
   OSMReader.ReadEntity(TempEntity, true);
-  std::cerr<< "Read the first entity. "<<std::endl;
   if ((TempEntity.DType != CXMLEntity::EType::StartElement) or (TempEntity.DNameData != "osm")) {
     return false;
   }
-
-  Node currentNode;
-  currentNode.NodeID = InvalidNodeID;
-  //when you get to a way node, create a new edge
-  //set currentEdge to newEdge
-  //need another else if statement line 84
-
+//used for the way XML tags
+  Node prevNode;
+  prevNode.NodeID = InvalidNodeID;
 
   while (!OSMReader.End()){
     OSMReader.ReadEntity(TempEntity, true);
@@ -81,39 +76,62 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
         Nodes.push_back(TempNode);
         SortedNodeIDs.push_back(TempNodeID);
       } else if(TempEntity.DNameData == "way"){
-        //you have to treat these like a stack
-        //
-
+        prevNode.NodeID = InvalidNodeID;
       } else if(TempEntity.DNameData == "nd") {
-        //this is gonna be the node that it passes through
-        if(currentNode.NodeID == InvalidNodeID) {
-
-          //every time you come to a way tag. set currentNode.NODEID to InvalidNodeID
-
-          //if the curre
-          //in here set curretnNode to the the node associated with the reference id
-          //AttributeValue of id, look up that node by its id (NodeTranslation) take that node set current node equal to that
+        if(prevNode.NodeID == InvalidNodeID) {
+          //sets node for first node in the way
+          TNodeID tempNodeID = std::stoul (TempEntity.AttributeValue("ref"));
+          prevNode = NodeTranslation.at(tempNodeID);
         } else {
-          //heres the case if its not invalid
-          //look up the node associated with this reference
-          //then add an edge to the currentNode. using the ID of this ND tag
-          //to do that do two things:
-          //calculate distance between current Node and the node that you just looked up in this else statement(use HaversineDistance)
-          //set edge to the current node, so your gonna have a distance and ID and then you are going to add that to the current NODE
-          //last step: set currentNode = to the NODE thats in this else script
+          //contiunes the train of nodes after the first one
+          TNodeID tempNodeID = std::stoul (TempEntity.AttributeValue("ref"));
+          Node currNode = NodeTranslation.at(tempNodeID);
+          Edge TempEdge;
+          //distance between the previous node and the current node
+          TempEdge.Distance = HaversineDistance(prevNode.Location.first, prevNode.Location.second,
+                                                currNode.Location.first, currNode.Location.second);
+          TempEdge.DestNodeID = tempNodeID;
 
-          //2 is not invalid -> look up distance between nodeId 1 and 2 and then set the corresponding fields
-          //then set currentNode to 2
-          //currentNode -> is really the node in the past
-
+          //add to list of edges
+          prevNode.Edges.push_back(TempEdge);
+          prevNode = currNode;
         }
-
-
       }
     }
   }
+
   std::sort(SortedNodeIDs.begin(), SortedNodeIDs.end());
+
+  //now loading the routes
+  CCSVReader RoutesReader(routes);
+  std::vector<std::string> row;
+  RoutesReader.ReadRow(row); //need to skip first line because its the header
+
+  while (RoutesReader.ReadRow(row)) {
+    if (Routes.find(row[0]) == Routes.end() ) {
+      //this means the key does not exist yet and we are putting it into the map
+      Routes[row[0]] = std::vector<TStopID>();
+      SortedRouteNames.push_back(row[0]);
+    }
+
+    Routes.at(row[0]).push_back(std::stoul(row[1]));
+  }
+  std::sort(SortedRouteNames.begin(), SortedRouteNames.end());
+
+  //now loading the stops
+  CCSVReader StopsReader(stops);
+  StopsReader.ReadRow(row); //need to skip first line because its the header
+
+  while (StopsReader.ReadRow(row)) {
+    //Stops
+    TStopID stopID = std::stoul(row[0]);
+    TNodeID nodeID = std::stoul(row[1]);
+    Stops[stopID] = nodeID;
+    SortedStopIDs.push_back(stopID);
+  }
+  std::sort(SortedStopIDs.begin(), SortedStopIDs.end());
   return true;
+
 
 }
 
@@ -172,29 +190,27 @@ CMapRouter::TLocation CMapRouter::GetSortedNodeLocationByIndex(size_t index) con
 }
 
 size_t CMapRouter::RouteCount() const{
-  return SortedNodeIDs.size();
+  return Routes.size();
 }
-
-
-
-
-
-
 
 //tonight
 CMapRouter::TNodeID CMapRouter::GetNodeIDByStopID(TStopID stopid) const{
-    // Your code HERE
-  return 0L;
+
+  return Stops.at(stopid);
 }
 
 std::string CMapRouter::GetSortedRouteNameByIndex(size_t index) const{
-  // Your code HERE
-  return "";
+  return SortedRouteNames[index];
+
 }
 
 bool CMapRouter::GetRouteStopsByRouteName(const std::string &route, std::vector< TStopID > &stops){
-  // Your code HERE
-  return true;
+  if (Routes.find(route) != Routes.end()) {
+    stops = Routes.at(route);
+    return true;
+  }
+  return false;
+
 }
 
 

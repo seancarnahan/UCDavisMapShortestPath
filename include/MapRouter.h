@@ -15,10 +15,9 @@ class CMapRouter{
         static const TNodeID InvalidNodeID;
 
     private:
-      using TNodeIndex = int;
       struct Edge {
         double Distance;
-        TNodeIndex DestNode;
+        TNodeID DestNodeID;
       };
 
       struct Node {
@@ -27,9 +26,15 @@ class CMapRouter{
         std::vector<Edge> Edges;
       };
 
+
+
       std::vector<Node> Nodes;
       std::map<TNodeID,Node> NodeTranslation;
       std::vector<TNodeID> SortedNodeIDs;
+      std::map<std::string, std::vector<TStopID>> Routes;
+      std::map<TStopID, TNodeID> Stops;
+      std::vector<TStopID> SortedStopIDs;
+      std::vector<std::string> SortedRouteNames;
 
     public:
         CMapRouter();
