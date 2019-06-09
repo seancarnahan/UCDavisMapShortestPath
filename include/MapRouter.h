@@ -22,7 +22,7 @@ class CMapRouter{
 
       struct Node {
         TNodeID NodeID;
-	      TLocation Location;
+	TLocation Location;
         std::vector<Edge> Edges;
       };
 
@@ -31,14 +31,11 @@ class CMapRouter{
       std::vector<Node> Nodes;
       std::map<TNodeID,Node> NodeTranslation;
       std::vector<TNodeID> SortedNodeIDs;
-      std::map<std::string, std::vector<TStopID>> Routes;
+      std::map<std::string, std::vector<TStopID>> RouteStopIDs;
+      std::map<std::string, std::vector<TNodeID>> RouteNodeIDs;
       std::map<TStopID, TNodeID> Stops;
       std::vector<TStopID> SortedStopIDs;
       std::vector<std::string> SortedRouteNames;
-
-      std::map<TNodeID, int> Distances; //id is shortest distance to each node from the initial source node
-      std::map<TNodeID, std::vector<TNodeID>> Paths; //id to the shortest paths from the initial source node
-      std::set<TNodeID> Unevaluated; //
 
 
 
@@ -59,10 +56,15 @@ class CMapRouter{
         std::string GetSortedRouteNameByIndex(size_t index) const;
         bool GetRouteStopsByRouteName(const std::string &route, std::vector< TStopID > &stops);
 
+	/* Added to reduce amount of copy and paste code */
+	size_t GetEdgeCountByID(TNodeID nodeid) const;
+	TNodeID GetEdgeNodeByIndex(TNodeID nodeid, size_t index) const;
+	double GetEdgeDistanceByIndex(TNodeID nodeid, size_t index) const;
+	bool GetRouteNodesByRouteName(const std::string &route, std::vector< TNodeID > &stops);
+	
         double FindShortestPath(TNodeID src, TNodeID dest, std::vector< TNodeID > &path);
         double FindFastestPath(TNodeID src, TNodeID dest, std::vector< TPathStep > &path);
         bool GetPathDescription(const std::vector< TPathStep > &path, std::vector< std::string > &desc) const;
-        //int NodeTranslation;
 };
 
 #endif

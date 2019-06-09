@@ -107,7 +107,7 @@ TEST(MapRouter,ShortestPathTest){
     std::stringstream InRoutes(RoutesCSVFileData);
     CMapRouter MapRouter;
     std::vector< CMapRouter::TNodeID > Path;
-    
+
     EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
     EXPECT_EQ(MapRouter.FindShortestPath(4, 3, Path), 166.840398945223);
     EXPECT_EQ(Path.size(), 3);
@@ -119,29 +119,29 @@ TEST(MapRouter,ShortestPathTest){
 }
 
 TEST(MapRouter,FastestPathTest){
-    // std::stringstream InOSM(OSMFileData);
-    // std::stringstream InStops(StopsCSVFileData);
-    // std::stringstream InRoutes(RoutesCSVFileData);
-    // CMapRouter MapRouter;
-    // std::vector< CMapRouter::TPathStep > Path;
-    //
-    // EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
-    // EXPECT_EQ(MapRouter.FindFastestPath(1, 6, Path), 54.3815860394229702);
-    // EXPECT_EQ(Path.size(), 6);
-    // if(6 == Path.size()){
-    //     EXPECT_EQ(std::get<0>(Path[0]), "Walk");
-    //     EXPECT_EQ(std::get<1>(Path[0]), 1);
-    //     EXPECT_EQ(std::get<0>(Path[1]), "Walk");
-    //     EXPECT_EQ(std::get<1>(Path[1]), 2);
-    //     EXPECT_EQ(std::get<0>(Path[2]), "Bus A");
-    //     EXPECT_EQ(std::get<1>(Path[2]), 3);
-    //     EXPECT_EQ(std::get<0>(Path[3]), "Bus A");
-    //     EXPECT_EQ(std::get<1>(Path[3]), 4);
-    //     EXPECT_EQ(std::get<0>(Path[4]), "Bus A");
-    //     EXPECT_EQ(std::get<1>(Path[4]), 5);
-    //     EXPECT_EQ(std::get<0>(Path[5]), "Walk");
-    //     EXPECT_EQ(std::get<1>(Path[5]), 6);
-    // }
+    std::stringstream InOSM(OSMFileData);
+    std::stringstream InStops(StopsCSVFileData);
+    std::stringstream InRoutes(RoutesCSVFileData);
+    CMapRouter MapRouter;
+    std::vector< CMapRouter::TPathStep > Path;
+
+    EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
+    EXPECT_EQ(MapRouter.FindFastestPath(1, 6, Path), 54.3815860394229702);
+    EXPECT_EQ(Path.size(), 6);
+    if(6 == Path.size()){
+        EXPECT_EQ(std::get<0>(Path[0]), "Walk");
+        EXPECT_EQ(std::get<1>(Path[0]), 1);
+        EXPECT_EQ(std::get<0>(Path[1]), "Walk");
+        EXPECT_EQ(std::get<1>(Path[1]), 2);
+        EXPECT_EQ(std::get<0>(Path[2]), "Bus A");
+        EXPECT_EQ(std::get<1>(Path[2]), 3);
+        EXPECT_EQ(std::get<0>(Path[3]), "Bus A");
+        EXPECT_EQ(std::get<1>(Path[3]), 4);
+        EXPECT_EQ(std::get<0>(Path[4]), "Bus A");
+        EXPECT_EQ(std::get<1>(Path[4]), 5);
+        EXPECT_EQ(std::get<0>(Path[5]), "Walk");
+        EXPECT_EQ(std::get<1>(Path[5]), 6);
+    }
 }
 
 TEST(MapRouter,PathDescriptionTest){
