@@ -36,6 +36,12 @@ class CMapRouter{
       std::vector<TStopID> SortedStopIDs;
       std::vector<std::string> SortedRouteNames;
 
+      std::map<TNodeID, int> Distances; //id is shortest distance to each node from the initial source node
+      std::map<TNodeID, std::vector<TNodeID>> Paths; //id to the shortest paths from the initial source node
+      std::set<TNodeID> Unevaluated; //
+
+
+
     public:
         CMapRouter();
         ~CMapRouter();

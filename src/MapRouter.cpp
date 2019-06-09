@@ -213,16 +213,81 @@ bool CMapRouter::GetRouteStopsByRouteName(const std::string &route, std::vector<
 
 }
 
-
-
-
-
 //do this Friday
 double CMapRouter::FindShortestPath(TNodeID src, TNodeID dest, std::vector< TNodeID > &path){
-  //path is a vector of nodes to the destination
-  //should return shortest distance
-  return 0.0;
+
+  //node id -> shortest distance to every node from the initial source node
+  std::map<TNodeID, double> distances;
+  for (int i = 0; i < SortedNodeIDs.size(); i++) {
+    distances[SortedNodeIDs[i]] = std::numeric_limits<double>::infinity();
+  }
+
+  //node id -> shortest paths from the initial source node
+  std::map<TNodeID, std::vector<TNodeID>> paths;
+  for (int i = 0; i < SortedNodeIDs.size(); i++) {
+    paths[SortedNodeIDs[i]] = std::vector<TNodeID>();
+  }
+
+  //list of unevaluated nodes IDs
+  std::set<TNodeID> unevaluated;
+  std::set<TNodeID> evaluated;
+
+  //initialize the first distance and node
+  distances[src] = 0.0;
+  unevaluated.insert(src);
+  paths[src].push_back(src);
+
+  //find the shortest distance and path to each node in the graph from the source node
+  while (unevaluated.size() > 0) {
+
+    //Find the node ID with the minimum distance in the uneval set
+    TNodeID minNodeID = InvalidNodeID;
+    double minDistance = std::numeric_limits<double>::infinity();
+    for (std::set<TNodeID>::iterator iter = unevaluated.begin(); iter != unevaluated.end(); ++iter) {
+      TNodeID nodeID = *iter;
+      double distance = distances[nodeID];
+      if (distance < minDistance) {
+	       minDistance = distance;
+	        minNodeID = nodeID;
+      }
+    }
+
+    unevaluated.erase(minNodeID);
+
+    for (int i = 0; i < NodeTranslation.at(minNodeID).Edges.size(); i++) {
+      TNodeID edgeNodeID = NodeTranslation.at(minNodeID).Edges[i].DestNodeID;
+      double edgeDistance = NodeTranslation.at(minNodeID).Edges[i].Distance;
+      if (!evaluated.count(edgeNodeID)) {
+	       double newDistance = distances[minNodeID] + edgeDistance;
+
+	       //if new distance is less than the stored instance
+	       //reset the distance and path to the new min
+	        if (newDistance < distances[edgeNodeID]) {
+	           distances[edgeNodeID] = newDistance;
+	           paths[edgeNodeID] = std::vector<TNodeID>();
+	           for (int j = 0; j < paths[minNodeID].size(); j++) {
+	              paths[edgeNodeID].push_back(paths[minNodeID][j]);
+	           }
+	           paths[edgeNodeID].push_back(edgeNodeID);
+	         }
+	          unevaluated.insert(edgeNodeID);
+      }
+
+    }
+
+    evaluated.insert(minNodeID);
+
+  } //end of the while loop
+
+
+  //set path to the minimum path to the dest node
+  path = paths[dest];
+
+  //return the minimum distance to the dest node
+  return distances[dest];
+    
 }
+
 
 double CMapRouter::FindFastestPath(TNodeID src, TNodeID dest, std::vector< TPathStep > &path){
   // Your code HERE

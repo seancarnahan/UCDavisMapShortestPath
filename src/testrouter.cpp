@@ -102,20 +102,20 @@ TEST(MapRouter,BasicTest){
 
 TEST(MapRouter,ShortestPathTest){
 
-    // std::stringstream InOSM(OSMFileData);
-    // std::stringstream InStops(StopsCSVFileData);
-    // std::stringstream InRoutes(RoutesCSVFileData);
-    // CMapRouter MapRouter;
-    // std::vector< CMapRouter::TNodeID > Path;
-    //
-    // EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
-    // EXPECT_EQ(MapRouter.FindShortestPath(4, 3, Path), 166.840398945223);
-    // EXPECT_EQ(Path.size(), 3);
-    // if(3 == Path.size()){
-    //     EXPECT_EQ(Path[0], 4);
-    //     EXPECT_EQ(Path[1], 5);
-    //     EXPECT_EQ(Path[2], 3);
-    // }
+    std::stringstream InOSM(OSMFileData);
+    std::stringstream InStops(StopsCSVFileData);
+    std::stringstream InRoutes(RoutesCSVFileData);
+    CMapRouter MapRouter;
+    std::vector< CMapRouter::TNodeID > Path;
+    
+    EXPECT_TRUE(MapRouter.LoadMapAndRoutes(InOSM, InStops, InRoutes));
+    EXPECT_EQ(MapRouter.FindShortestPath(4, 3, Path), 166.840398945223);
+    EXPECT_EQ(Path.size(), 3);
+    if(3 == Path.size()){
+        EXPECT_EQ(Path[0], 4);
+        EXPECT_EQ(Path[1], 5);
+        EXPECT_EQ(Path[2], 3);
+    }
 }
 
 TEST(MapRouter,FastestPathTest){
