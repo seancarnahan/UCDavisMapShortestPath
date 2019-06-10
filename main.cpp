@@ -8,7 +8,9 @@
 int main(int argc,char** argv)
 {
   CMapRouter router;
-  std::ifstream map, routes, stops;
+  std::ifstream map("../data/davis.osm");
+  std::ifstream stops("../data/stops.csv");
+  std::ifstream routes("../data/routes.csv");
   std::ofstream outputFile;
   std::vector<TPathStep> path;
   router.LoadMapAndRoutes(map, stops, routes);
@@ -94,9 +96,8 @@ int main(int argc,char** argv)
       } else {
         std::vector<std::string> description;
         router.GetPathDescription(path, description);
-        std::ofstream writeFile;
-        writeFile.open("results.txt");
-        writeFile << description
+        outputFile.open("results.txt");
+        outputFile << description
       }
     }
 
