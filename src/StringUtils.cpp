@@ -3,8 +3,9 @@
 #include <cctype>
 #include <cstdio>
 #include <iostream>
-#include<string.h>
-#include<vector>
+#include <sstream>
+#include <string>
+#include <vector>
 
 namespace StringUtils{
 
@@ -196,26 +197,35 @@ std::string Replace(const std::string &str, const std::string &old, const std::s
 
 std::vector< std::string > Split(const std::string &str, const std::string &splt){
   std::vector<std::string> v;
-  std::string buffer;
-  for(int i = 0; i < str.length(); i++) {
-    if (i == str.length() - 1) {
-      buffer += str[i];
-      v.push_back(buffer);
-      break;
-    }
 
-    if (str[i] == '/') {
-      v.push_back(buffer);
-      buffer = "";
-    }
+  std::istringstream input(str);
+  std::string word;
 
-    if (str[i] == '/') {
-      continue;
-    }
-
-    buffer += str[i];
-    std::cout << "buffer: " << buffer <<'\n';
+  while (std::getline(input, word, splt.at(0))) {
+    v.push_back(word);
   }
+  
+  // std::string buffer;
+  // for(int i = 0; i < str.length(); i++) {
+  //   if (i == str.length() - 1) {
+  //     buffer += str[i];
+  //     v.push_back(buffer);
+  //     break;
+  //   }
+
+  //   if (str[i] == '/') {
+  //     v.push_back(buffer);
+  //     buffer = "";
+  //   }
+
+  //   if (str[i] == '/') {
+  //     continue;
+  //   }
+
+  //   buffer += str[i];
+  //   //std::cout << "buffer: " << buffer <<'\n';
+  // }
+  
   return v;
 }
 

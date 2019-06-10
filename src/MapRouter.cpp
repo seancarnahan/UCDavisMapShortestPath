@@ -140,6 +140,9 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
     std::string routeName = GetSortedRouteNameByIndex(i);
     std::vector<TStopID> routeStopIDs;
     if (GetRouteStopsByRouteName(routeName, routeStopIDs)) {
+
+      //need to sort the route stops for this to work
+      std::sort(routeStopIDs.begin(), routeStopIDs.end());
       
       //loop through both vectors simultaneously
       //and fillin any gaps between the stops and the routes
@@ -148,7 +151,7 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
       auto sortedStopIDsIter = SortedStopIDs.begin();
       auto routeStopIDsIter = routeStopIDs.begin();
       bool prevMatch = false;
-      while (sortedStopIDsIter < SortedStopIDs.end() ||
+      while (sortedStopIDsIter < SortedStopIDs.end() &&
       	     routeStopIDsIter < routeStopIDs.end()) {	
       	TStopID sortedStopID = *sortedStopIDsIter;
       	TStopID routeStopID  = *routeStopIDsIter;
@@ -163,7 +166,9 @@ bool CMapRouter::LoadMapAndRoutes(std::istream &osm, std::istream &stops, std::i
 	  //if no match but the previous stop matched then add the node
       	  RouteNodeIDs.at(routeName).push_back(sortedNodeID);
       	  sortedStopIDsIter++;	  
-      	}
+      	} else {
+	  sortedStopIDsIter++;
+	}
       }
       
     }
@@ -257,7 +262,10 @@ bool CMapRouter::GetRouteNodesByRouteName(const std::string &route, std::vector<
 
 
 size_t CMapRouter::GetEdgeCountByID(TNodeID nodeid) const {
-  return NodeTranslation.at(nodeid).Edges.size();
+  if (NodeTranslation.count(nodeid) > 0) { 
+    return NodeTranslation.at(nodeid).Edges.size();
+  }
+  return 0;
 }
 
 CMapRouter::TNodeID CMapRouter::GetEdgeNodeByIndex(TNodeID nodeid, size_t index) const {
@@ -279,6 +287,8 @@ double CMapRouter::GetEdgeDistanceByIndex(TNodeID nodeid, size_t index) const {
 double findMinimumPath (CMapRouter::TNodeID src, CMapRouter::TNodeID dest, std::vector< CMapRouter::TNodeID > &path,
 			CMapRouter *router, double (*getMinimum)(CMapRouter*,CMapRouter::TNodeID,size_t)) {
 
+  //std::cout << "Starting dijkstra minimum for start[" << src << "] dest[" << dest << "]" << std::endl;
+  
   //node id -> shortest distance to every node from the initial source node 
   std::map<CMapRouter::TNodeID, double> minimums;
   std::map<CMapRouter::TNodeID, std::vector<CMapRouter::TNodeID>> paths; 
@@ -344,6 +354,8 @@ double findMinimumPath (CMapRouter::TNodeID src, CMapRouter::TNodeID dest, std::
     
   } //end of the while loop
   
+
+  //std::cout << "Finished dijkstra minimum for start[" << src << "] dest[" << dest << "]" << std::endl;
   
   //set path to the minimum path to the dest node
   path = paths[dest];

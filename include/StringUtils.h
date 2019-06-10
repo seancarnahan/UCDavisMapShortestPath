@@ -16,7 +16,7 @@ std::string Center(const std::string &str, int width, char fill = ' ');
 std::string LJust(const std::string &str, int width, char fill = ' ');
 std::string RJust(const std::string &str, int width, char fill = ' ');
 std::string Replace(const std::string &str, const std::string &old, const std::string &rep);
-std::vector< std::string > Split(const std::string &str, const std::string &splt = "");
+std::vector< std::string > Split(const std::string &str, const std::string &splt = " ");
 std::string Join(const std::string &str, const std::vector< std::string > &vect);
 std::string ExpandTabs(const std::string &str, int tabsize = 4);
 int EditDistance(const std::string &left, const std::string &right, bool ignorecase=false);
